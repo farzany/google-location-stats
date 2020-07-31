@@ -19,6 +19,10 @@ distance_subway = 0
 failed = 0
 success = 0
 
+# Select the time period to look through
+period = input("=============\n1. All-Time (all) \n2. Specific Year (####) [Example: 2020]\n3. Specific Year/Month (####_MONTH) [Example: 2020_JANUARY]\nChoose a time period (in specified format)\t")
+
+
 # Given a json.load() dict, iterates through the dicts of the first key, 
 # "timelineObjects". If the dict/key is an "activitySegment", 
 # looks for "distance" and "activityType" keys and their values.
@@ -58,14 +62,21 @@ with zipfile.ZipFile(history,'r') as z:
             print(filename)
             with z.open(filename) as f:
                 if (filename != "Takeout/Location History/Location History.json") and (filename != "Takeout/archive_browser.html"):
-                    data = json.load(f)
-                    GetDistance(data)
+                    if period == "all":
+                        data = json.load(f)
+                        GetDistance(data)
+                    elif period in filename:
+                        data = json.load(f)
+                        GetDistance(data)
+                    else:
+                        pass
                 else:
                     pass
         except:
             pass
 
 # Printing the recorded values
+print("=============")
 print("File:\t\t" + history)
 print("Biked:\t\t" + str(distance_bicycle/1000) + " km")
 print("Walked/Ran:\t" + str(distance_foot/1000) + " km")
